@@ -1,0 +1,26 @@
+business:
+  name: "Sunrise Dental Clinic"
+  hours: "Mon-Sat, 10:00 AM - 7:00 PM"
+  location: "Shop 12, MG Road, Ghaziabad"
+  contact_number: "+91-9876543210"
+  services:
+    - "General Checkup"
+    - "Teeth Cleaning"
+    - "Root Canal"
+    - "Braces Consultation"
+
+faqs:
+  - question: "What are your timings?"
+    answer: "We are open Mon-Sat, 10:00 AM to 7:00 PM. Closed on Sundays."
+  - question: "Where are you located?"
+    answer: "Shop 12, MG Road, Ghaziabad. Near the metro station."
+  - question: "Do you accept walk-ins?"
+    answer: "Yes, but booking an appointment saves your waiting time."
+  - question: "What is the consultation fee?"
+    answer: "Consultation fee is Rs. 300, adjustable against treatment cost."
+
+booking:
+  enabled: true
+  slots_per_day: 10
+  slot_start_hour: 10
+  slot_end_hour: 19
