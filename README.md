@@ -88,12 +88,6 @@ verification — perfect for demos and MVPs. To move to WhatsApp:
 - Replace `src/bot.py`'s Telegram polling loop with a Flask/FastAPI webhook that Twilio calls on incoming messages
 - `knowledge.py`, `llm.py`, and `booking.py` need **zero changes** — that's the whole point of separating business logic from the messaging platform
 
-## Monetization angle
-
-This is built to be resold, not just demoed:
-- **Setup service**: charge local businesses a one-time fee to customize `config.yaml`, deploy it, and connect their number
-- **Retainer**: monthly fee to maintain/update FAQs and monitor bookings
-- **Vertical templates**: pre-built `config.yaml` templates for clinics, salons, gyms, restaurants — sell the same bot repeatedly with a 5-minute setup
 
 ## Tech stack
 

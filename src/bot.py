@@ -73,6 +73,14 @@ def main() -> None:
             "TELEGRAM_BOT_TOKEN not set. Create a bot via @BotFather on Telegram, "
             "then put the token in your .env file."
         )
+    
+
+    import asyncio
+    try:
+        asyncio.get_event_loop()
+    except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+
 
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
