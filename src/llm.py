@@ -3,8 +3,11 @@ Thin wrapper around Groq's OpenAI-compatible chat API.
 Groq has a generous free tier and is fast enough for real-time chat replies.
 Swap BASE_URL/MODEL if you'd rather use Gemini or another free-tier provider.
 """
+import logging
 import os
 import requests
+
+logger = logging.getLogger(__name__)
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 BASE_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -61,4 +64,9 @@ def ask_llm(user_message: str, context: str, history: list[dict] | None = None) 
         data = resp.json()
         return data["choices"][0]["message"]["content"].strip()
     except requests.exceptions.RequestException as e:
-        return f"Sorry, I'm having trouble replying right now. Please try again in a bit. ({e})"
+        logger.error("Groq API request failed: %s", e)
+        return "Sorry, I'm having trouble replying right now. Please try again in a bit."
+    except (KeyError, IndexError, ValueError) as e:
+        # Covers malformed/unexpected response shape and JSON decode errors
+        logger.error("Groq API returned an unexpected response: %s", e)
+        return "Sorry, I'm having trouble replying right now. Please try again in a bit."
