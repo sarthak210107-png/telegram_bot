@@ -46,25 +46,31 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     chat_id = update.effective_chat.id
     text = update.message.text.strip()
 
-    # Route to booking flow if one is active, or if user typed "book"
-    if is_booking_in_progress(chat_id):
-        reply = handle_booking_step(chat_id, text, config)
+    try:
+        # Route to booking flow if one is active, or if user typed "book"
+        if is_booking_in_progress(chat_id):
+            reply = handle_booking_step(chat_id, text, config)
+            await update.message.reply_text(reply)
+            return
+
+        if text.lower() in ("book", "book appointment", "appointment"):
+            reply = start_booking(chat_id)
+            await update.message.reply_text(reply)
+            return
+
+        # Otherwise, answer with the LLM grounded on business info
+        history = _chat_history[chat_id][-MAX_HISTORY_TURNS:]
+        reply = ask_llm(text, business_context, history)
+
+        _chat_history[chat_id].append({"role": "user", "content": text})
+        _chat_history[chat_id].append({"role": "assistant", "content": reply})
+
         await update.message.reply_text(reply)
-        return
-
-    if text.lower() in ("book", "book appointment", "appointment"):
-        reply = start_booking(chat_id)
-        await update.message.reply_text(reply)
-        return
-
-    # Otherwise, answer with the LLM grounded on business info
-    history = _chat_history[chat_id][-MAX_HISTORY_TURNS:]
-    reply = ask_llm(text, business_context, history)
-
-    _chat_history[chat_id].append({"role": "user", "content": text})
-    _chat_history[chat_id].append({"role": "assistant", "content": reply})
-
-    await update.message.reply_text(reply)
+    except Exception:
+        logger.exception("Unhandled error while processing message for chat_id=%s", chat_id)
+        await update.message.reply_text(
+            "Sorry, something went wrong on my end. Please try again in a moment."
+        )
 
 
 def main() -> None:
